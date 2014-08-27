@@ -1,8 +1,6 @@
 solrcount
 =========
 
-A simple SOLR proxy.
-
 A proxy for solr requests, that will only reveal the number of results.
 
     $ solrcount -h
