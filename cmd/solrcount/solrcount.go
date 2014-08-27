@@ -71,7 +71,7 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "solrcount %s\n", Version)
+		fmt.Fprintf(w, "solrcount %s, go to: /proxy?q=*:*\n", Version)
 	})
 
 	http.HandleFunc("/proxy", func(w http.ResponseWriter, r *http.Request) {
