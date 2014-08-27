@@ -85,7 +85,12 @@ func main() {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		response := Response{Status: res.Status, QTime: res.QTime, QueryString: r.URL.RawQuery, NumFound: res.Results.NumFound}
+		response := Response{
+			Status:      res.Status,
+			QTime:       res.QTime,
+			QueryString: r.URL.RawQuery,
+			NumFound:    res.Results.NumFound,
+		}
 		b, err := json.Marshal(response)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
