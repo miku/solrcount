@@ -78,6 +78,7 @@ func main() {
 		s, err := solr.Init(*solrHost, *solrPort, *solrCore)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		res, err := s.SelectRaw(r.URL.RawQuery)
