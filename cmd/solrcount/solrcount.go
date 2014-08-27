@@ -45,6 +45,7 @@ package main
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"net/http"
@@ -52,13 +53,29 @@ import (
 	"github.com/rtt/Go-Solr"
 )
 
-const Version = "1.0.0"
+const Version = "1.0.1"
+
+const (
+	mimeTSV  = "text/tab-separated-values; charset=utf-8"
+	mimeXML  = "application/xml; charset=utf-8"
+	mimeJSON = "application/json; charset=utf-8"
+	mimeText = "text/plain; charset=utf-8"
+)
 
 type Response struct {
-	Status      int    `json:"status"`
-	QTime       int    `json:"qtime"`
-	QueryString string `json:"q"`
-	NumFound    int    `json:"count"`
+	XMLName     xml.Name `json:"-"      xml:"response"`
+	Status      int      `json:"status" xml:"status"`
+	QTime       int      `json:"qtime"  xml:"qtime"`
+	QueryString string   `json:"q"      xml:"q"`
+	NumFound    int      `json:"count"  xml:"count"`
+}
+
+func (r Response) String() string {
+	return fmt.Sprintf("%d", r.NumFound)
+}
+
+func (r Response) TSV() string {
+	return fmt.Sprintf("%d\t%d\t%s\t%d", r.Status, r.QTime, r.QueryString, r.NumFound)
 }
 
 func main() {
@@ -75,6 +92,7 @@ func main() {
 	})
 
 	http.HandleFunc("/proxy", func(w http.ResponseWriter, r *http.Request) {
+		var err error
 		s, err := solr.Init(*solrHost, *solrPort, *solrCore)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -92,14 +110,30 @@ func main() {
 			QueryString: r.URL.RawQuery,
 			NumFound:    res.Results.NumFound,
 		}
-		b, err := json.Marshal(response)
+		accept := r.Header.Get("Accept")
+		var b []byte
+		switch accept {
+		case "text/plain":
+			b = []byte(fmt.Sprintf("%s\n", response))
+			w.Header().Set("Content-Type", mimeText)
+		case "text/tab-separated-values":
+			b = []byte(fmt.Sprintf("%s\n", response.TSV()))
+			w.Header().Set("Content-Type", mimeTSV)
+		case "application/xml":
+			b, err = xml.Marshal(response)
+			w.Header().Set("Content-Type", mimeXML)
+		case "application/json":
+			b, err = json.Marshal(response)
+			w.Header().Set("Content-Type", mimeJSON)
+		default:
+			b, err = json.Marshal(response)
+			w.Header().Set("Content-Type", mimeJSON)
+		}
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		fmt.Fprintf(w, "%s", string(b))
 	})
-
 	http.ListenAndServe(*listen, nil)
 }

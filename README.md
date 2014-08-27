@@ -44,3 +44,13 @@ with a HTTP status codes:
     > Accept: */*
     >
     < HTTP/1.1 400 Bad Request
+
+Output can be JSON, XML or TSV, depending on the [Accept](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1) header.
+
+    $ curl -H 'accept: application/xml' localhost:9999/proxy?q=Hello
+    <response><status>0</status><qtime>0</qtime><q>q=Hello</q><count>1686</count></response>
+
+    $ curl -H 'accept: text/plain' localhost:9999/proxy?q=Hello
+	1686
+
+Default response mimetype is *application/json*.

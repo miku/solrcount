@@ -1,6 +1,6 @@
 Summary:    A proxy for solr requests, that will only reveal the number of results.
 Name:       solrcount
-Version:    1.0.0
+Version:    1.0.1
 Release:    0
 License:    MIT
 BuildArch:  x86_64
