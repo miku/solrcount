@@ -30,6 +30,17 @@
 //     $ curl localhost:9999/proxy?q=Hello%20OR%20World
 //     {"status":0,"qtime":62,"q":"q=Hello%20OR%20World","count":545878}
 //
+// The query given to the proxy must be already properly escaped. Errors are signalled
+// with a HTTP status codes:
+//
+//     $ curl -v localhost:18080/proxy?q="Hello World"
+//     > GET /proxy?q=Hello World HTTP/1.1
+//     > User-Agent: curl/7.35.0
+//     > Host: 127.0.0.1:18080
+//     > Accept: */*
+//     >
+//     < HTTP/1.1 400 Bad Request
+//
 package main
 
 import (
