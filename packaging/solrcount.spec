@@ -46,5 +46,5 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 
 %changelog
-* Web Aug 27 2014 Martin Czygan
+* Wed Aug 27 2014 Martin Czygan
 - 1.0.0 initial release
