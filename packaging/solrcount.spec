@@ -47,4 +47,7 @@ rm -rf %{_topdir}/BUILD/%{name}
 
 %changelog
 * Wed Aug 27 2014 Martin Czygan
+- 1.0.1 added support for XML and plaintext responses
+
+* Wed Aug 27 2014 Martin Czygan
 - 1.0.0 initial release
