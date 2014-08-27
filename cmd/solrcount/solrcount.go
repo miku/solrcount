@@ -49,6 +49,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"runtime"
 
 	"github.com/rtt/Go-Solr"
 )
@@ -84,8 +85,11 @@ func main() {
 	solrPort := flag.Int("port", 8080, "port of the SOLR server to proxy")
 	solrCore := flag.String("core", "biblio", "SOLR core name")
 	listen := flag.String("listen", ":18080", "host and port to listen on")
+	numWorkers := flag.Int("w", runtime.NumCPU(), "concurrency level")
 
 	flag.Parse()
+
+	runtime.GOMAXPROCS(*numWorkers)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "solrcount %s, go to: /proxy?q=*:*\n", Version)
