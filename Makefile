@@ -57,20 +57,22 @@ PORT = 2222
 SSHCMD = ssh -o StrictHostKeyChecking=no -i vagrant.key vagrant@127.0.0.1 -p $(PORT)
 SCPCMD = scp -o port=$(PORT) -o StrictHostKeyChecking=no -i vagrant.key
 
+VMHOME = /home/vagrant
+OWNER = github.com/miku
+
 # Helper to build RPM on a RHEL6 VM, to link against glibc 2.12
 vagrant.key:
 	curl -sL "https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant" > vagrant.key
 	chmod 0600 vagrant.key
 
-# Don't forget to vagrant up :) - and add your public key to the guests authorized_keys
 setup: vagrant.key
-	$(SSHCMD) "sudo yum install -y sudo yum install http://ftp.riken.jp/Linux/fedora/epel/6/i386/epel-release-6-8.noarch.rpm"
+	$(SSHCMD) "sudo yum install -y http://ftp.riken.jp/Linux/fedora/epel/6/i386/epel-release-6-8.noarch.rpm"
 	$(SSHCMD) "sudo yum install -y golang git rpm-build"
-	$(SSHCMD) "mkdir -p /home/vagrant/src/github.com/miku"
-	$(SSHCMD) "cd /home/vagrant/src/github.com/miku && git clone https://github.com/miku/solrcount.git"
+	$(SSHCMD) "mkdir -p $(VMHOME)/src/$(OWNER)"
+	$(SSHCMD) "cd $(VMHOME)/src/$(OWNER) && git clone https://$(OWNER)/solrcount.git"
 
 rpm-compatible: vagrant.key
-	$(SSHCMD) "cd /home/vagrant/src/github.com/miku/solrcount && GOPATH=/home/vagrant go get ./..."
-	$(SSHCMD) "cd /home/vagrant/src/github.com/miku/solrcount && git pull origin master && pwd && GOPATH=/home/vagrant make rpm"
-	$(SCPCMD) vagrant@127.0.0.1:/home/vagrant/src/github.com/miku/solrcount/*rpm .
+	$(SSHCMD) "cd $(VMHOME)/src/$(OWNER)/solrcount && GOPATH=$(VMHOME) go get ./..."
+	$(SSHCMD) "cd $(VMHOME)/src/$(OWNER)/solrcount && git pull origin master && pwd && GOPATH=$(VMHOME) make rpm"
+	$(SCPCMD) vagrant@127.0.0.1:$(VMHOME)/src/$(OWNER)/solrcount/*rpm .
 
