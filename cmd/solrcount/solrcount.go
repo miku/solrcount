@@ -54,7 +54,7 @@ import (
 	"github.com/rtt/Go-Solr"
 )
 
-const Version = "1.0.1"
+const Version = "1.0.2"
 
 const (
 	mimeTSV  = "text/tab-separated-values; charset=utf-8"
