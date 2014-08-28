@@ -9,6 +9,7 @@ A proxy for solr requests, that will only reveal the number of results.
       -host="localhost": host of the SOLR server to proxy
       -listen=":18080": host and port to listen on
       -port=8080: port of the SOLR server to proxy
+      -w=4: concurrency level
 
 `host`, `port` and `core` are parameters of the target SOLR server.
 `listen` is a combined `host:port` string, where this proxy should listen.
