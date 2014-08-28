@@ -13,7 +13,7 @@ A proxy for solr requests, that will only reveal the number of results.
 `host`, `port` and `core` are parameters of the target SOLR server.
 `listen` is a combined `host:port` string, where this proxy should listen.
 
-Starting a server:
+Starting the server:
 
     $ solrcount -host 10.0.0.1 -port 8080 -core biblio -listen :9999
 
@@ -47,10 +47,10 @@ with a HTTP status codes:
 
 Output can be JSON, XML or TSV, depending on the [Accept](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1) header.
 
-    $ curl -H 'accept: application/xml' localhost:9999/proxy?q=Hello
-    <response><status>0</status><qtime>0</qtime><q>q=Hello</q><count>1686</count></response>
+    $ curl -H 'Accept: application/xml' localhost:9999/proxy?q=Hi
+    <response><status>0</status><qtime>1</qtime><q>q=Hi</q><count>4216</count></response>
 
-    $ curl -H 'accept: text/plain' localhost:9999/proxy?q=Hello
-	1686
+    $ curl -H 'Accept: text/plain' localhost:9999/proxy?q=Hi
+    4216
 
 Default response mimetype is *application/json*.
