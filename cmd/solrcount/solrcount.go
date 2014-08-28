@@ -5,7 +5,8 @@
 //   -host="localhost": host of the SOLR server to proxy
 //   -listen=":18080": host and port to listen on
 //   -port=8080: port of the SOLR server to proxy
-
+//   -w=4: concurrency level
+//
 // `host`, `port` and `core` are parameters of the target SOLR server.
 // `listen` is a combined `host:port` string, where this proxy should listen.
 //
@@ -40,6 +41,17 @@
 //     > Accept: */*
 //     >
 //     < HTTP/1.1 400 Bad Request
+//
+// Output can be JSON, XML or TSV, depending on the
+// [Accept](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1) header.
+//
+//     $ curl -H 'Accept: application/xml' localhost:9999/proxy?q=Hi
+//     <response><status>0</status><qtime>1</qtime><q>q=Hi</q><count>4216</count></response>
+//
+//     $ curl -H 'Accept: text/plain' localhost:9999/proxy?q=Hi
+//     4216
+//
+// Default response mimetype is *application/json*.
 //
 package main
 
