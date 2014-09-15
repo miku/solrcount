@@ -138,9 +138,6 @@ func main() {
 		case "application/xml":
 			b, err = xml.Marshal(response)
 			w.Header().Set("Content-Type", mimeXML)
-		case "application/json":
-			b, err = json.Marshal(response)
-			w.Header().Set("Content-Type", mimeJSON)
 		default:
 			b, err = json.Marshal(response)
 			w.Header().Set("Content-Type", mimeJSON)
